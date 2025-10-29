@@ -56,10 +56,217 @@ function toBulletList(text) {
     .join("\n");
 }
 
+const STOP_WORDS = new Set([
+  "a",
+  "ale",
+  "ani",
+  "asi",
+  "bez",
+  "by",
+  "byl",
+  "byla",
+  "bylo",
+  "byly",
+  "co",
+  "do",
+  "ho",
+  "i",
+  "jak",
+  "je",
+  "jsou",
+  "jsem",
+  "jsi",
+  "k",
+  "kde",
+  "která",
+  "které",
+  "který",
+  "má",
+  "mají",
+  "málo",
+  "mezi",
+  "mít",
+  "na",
+  "nad",
+  "nebo",
+  "není",
+  "o",
+  "od",
+  "po",
+  "pod",
+  "pokud",
+  "pro",
+  "proto",
+  "první",
+  "se",
+  "si",
+  "s",
+  "tak",
+  "tam",
+  "ten",
+  "tento",
+  "tě",
+  "to",
+  "toto",
+  "u",
+  "už",
+  "ve",
+  "v",
+  "vše",
+  "všech",
+  "všechny",
+  "z",
+  "za",
+]);
+
+function upperFirst(text) {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  const chars = Array.from(trimmed);
+  const [first, ...rest] = chars;
+  return first.toLocaleUpperCase("cs-CZ") + rest.join("");
+}
+
+function splitIntoMeaningfulUnits(text) {
+  const rawLines = text
+    .split(/[\n\r]+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const fragments = [];
+
+  rawLines.forEach((line) => {
+    const sanitized = line.replace(/^[\-\*•–\u2022]+\s*/, "");
+    const sentences = sanitized.match(/[^.!?]+[.!?]?/gu);
+
+    if (sentences) {
+      sentences.forEach((sentence) => {
+        const trimmed = sentence.trim();
+        if (trimmed) {
+          fragments.push(trimmed);
+        }
+      });
+    } else if (sanitized) {
+      fragments.push(sanitized);
+    }
+  });
+
+  if (!fragments.length && text.trim()) {
+    fragments.push(text.trim());
+  }
+
+  return fragments;
+}
+
+function extractTopKeywords(text, maxKeywords = 6) {
+  const tokens = text.toLowerCase().match(/[a-zá-ž0-9]+/giu) || [];
+  const filtered = tokens.filter((token) => token.length > 3 && !STOP_WORDS.has(token));
+
+  const frequency = new Map();
+  filtered.forEach((token) => {
+    frequency.set(token, (frequency.get(token) || 0) + 1);
+  });
+
+  return Array.from(frequency.entries())
+    .sort((a, b) => {
+      if (b[1] === a[1]) {
+        return a[0].localeCompare(b[0], "cs");
+      }
+      return b[1] - a[1];
+    })
+    .slice(0, maxKeywords)
+    .map(([word]) => word);
+}
+
+function detectMissingDetails(text) {
+  const suggestions = [];
+
+  if (!/(publikum|uživatel|uživatelé|klient|klienti|zákazník|zákazníci|cílová skupina|audience|divák|čtenář|student|tým)/i.test(text)) {
+    suggestions.push("Uveď přesně cílové publikum nebo zainteresované strany, pro které je výstup určen.");
+  }
+
+  if (!/(deadline|termín|lhůta|do\s+\d|časový rámec|časový harmonogram|časový plán)/i.test(text)) {
+    suggestions.push("Specifikuj časový rámec, milníky nebo termíny, které musí být dodrženy.");
+  }
+
+  if (!/(rozpočet|budget|náklad|financ|limit|omezení)/i.test(text)) {
+    suggestions.push("Doplň rozpočtové limity, dostupné zdroje nebo jiná omezení.");
+  }
+
+  if (!/(cíl|cíle|úspěch|metrika|měřítko|kpi|výsledek|výsledky)/i.test(text)) {
+    suggestions.push("Popiš, jak bude vypadat úspěch a jaké metriky nebo kritéria se mají sledovat.");
+  }
+
+  if (!/(formát|format|kanál|platforma|deliverable|výstupní formát|způsob dodání)/i.test(text)) {
+    suggestions.push("Upřesni výsledný formát, kanál nebo platformu, kde má být výstup využit.");
+  }
+
+  if (!/(rizik|úskalí|překáž|závislost|předpoklad)/i.test(text)) {
+    suggestions.push("Zvaž možná rizika, závislosti nebo předpoklady, které mohou ovlivnit řešení.");
+  }
+
+  if (!suggestions.length) {
+    suggestions.push("Kontext pokrývá klíčové parametry; pouze ověř konzistenci informací během řešení.");
+  }
+
+  return suggestions;
+}
+
+function enhanceContext(rawContext) {
+  const trimmed = rawContext.trim();
+  if (!trimmed) {
+    return "Kontext nebyl upřesněn; nejprve si vyžádej klíčové informace a potvrď zadání.";
+  }
+
+  const fragments = splitIntoMeaningfulUnits(trimmed);
+  const uniqueFragments = [];
+
+  fragments.forEach((fragment) => {
+    const normalized = fragment.toLocaleLowerCase("cs-CZ");
+    if (!uniqueFragments.some((existing) => existing.toLocaleLowerCase("cs-CZ") === normalized)) {
+      uniqueFragments.push(fragment);
+    }
+  });
+
+  const bulletPoints = uniqueFragments
+    .slice(0, 8)
+    .map((fragment) => `- ${upperFirst(fragment)}`)
+    .join("\n");
+
+  const keywords = extractTopKeywords(trimmed);
+  const keywordLine = keywords.length
+    ? `Klíčová témata k akcentování: ${keywords
+        .map((word) => upperFirst(word))
+        .join(", ")}.`
+    : "Klíčová témata k akcentování: stanov specifické pojmy, které nesmí chybět.";
+
+  const refinementSuggestions = detectMissingDetails(trimmed)
+    .map((item) => `- ${item}`)
+    .join("\n");
+
+  return [
+    "Klíčová fakta z kontextu:",
+    bulletPoints,
+    "",
+    keywordLine,
+    "",
+    "Doplňující body k ověření:",
+    refinementSuggestions,
+  ]
+    .filter((section) => section !== null && section !== undefined)
+    .join("\n");
+}
+
 function buildPrompt(values) {
   const { tool, role, context, steps, output, tone } = values;
 
   const promptSections = [];
+
+  const enhancedContext = enhanceContext(context || "");
+  const originalContext = (context || "").trim();
 
   promptSections.push(
     [
@@ -72,7 +279,11 @@ function buildPrompt(values) {
   promptSections.push(
     [
       "=== KONTEXT ===",
-      context,
+      "Shrnutí a rozšíření zadání:",
+      enhancedContext,
+      originalContext ? "" : null,
+      originalContext ? "Původní poznámky od zadavatele:" : null,
+      originalContext || null,
       "Zohledni výše uvedené skutečnosti při každém kroku řešení.",
     ].join("\n")
   );
