@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1400" viewBox="0 0 1400 1400">
+  <defs>
+    <radialGradient id="wash" cx="30%" cy="25%" r="90%">
+      <stop offset="0%" stop-color="#f1faf3" />
+      <stop offset="55%" stop-color="#d8eedf" />
+      <stop offset="100%" stop-color="#c2e1cf" />
+    </radialGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="35" />
+    </filter>
+    <linearGradient id="branchGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4e7b57" />
+      <stop offset="100%" stop-color="#789c6f" />
+    </linearGradient>
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9bd08f" />
+      <stop offset="100%" stop-color="#6aad6c" />
+    </linearGradient>
+    <linearGradient id="leafLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9e7c4" />
+      <stop offset="100%" stop-color="#8dc38b" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1400" height="1400" fill="url(#wash)" />
+
+  <g opacity="0.65" filter="url(#soft)">
+    <circle cx="250" cy="320" r="180" fill="#cbe7d1" />
+    <circle cx="420" cy="160" r="140" fill="#b9ddc1" />
+    <circle cx="680" cy="260" r="220" fill="#d6f0da" />
+    <circle cx="560" cy="560" r="260" fill="#c6e5cd" />
+    <circle cx="880" cy="420" r="180" fill="#b4d8b8" />
+    <circle cx="1020" cy="720" r="240" fill="#cfead3" />
+    <circle cx="720" cy="920" r="220" fill="#d4efd8" />
+    <circle cx="420" cy="960" r="260" fill="#bddfc5" />
+    <circle cx="260" cy="700" r="180" fill="#cce8d2" />
+    <circle cx="1040" cy="1040" r="220" fill="#c0e1c8" />
+  </g>
+
+  <g opacity="0.92">
+    <path d="M340 1040 C520 840 720 620 940 340" stroke="url(#branchGradient)" stroke-width="26" stroke-linecap="round" fill="none" />
+    <path d="M840 480 C900 420 980 320 1020 260" stroke="url(#branchGradient)" stroke-width="20" stroke-linecap="round" fill="none" />
+    <path d="M680 620 C760 540 820 480 900 400" stroke="url(#branchGradient)" stroke-width="18" stroke-linecap="round" fill="none" />
+    <path d="M520 780 C620 680 700 600 780 520" stroke="url(#branchGradient)" stroke-width="18" stroke-linecap="round" fill="none" />
+    <path d="M420 900 C500 820 560 760 640 680" stroke="url(#branchGradient)" stroke-width="16" stroke-linecap="round" fill="none" />
+  </g>
+
+  <g opacity="0.96">
+    <path d="M1020 260 C1110 220 1180 240 1200 320 C1110 360 1040 350 1020 260" fill="url(#leafGradient)" />
+    <path d="M980 340 C1060 320 1120 340 1140 400 C1060 420 1000 410 980 340" fill="url(#leafLight)" opacity="0.9" />
+    <path d="M900 400 C980 380 1040 400 1060 460 C980 480 920 470 900 400" fill="url(#leafGradient)" />
+    <path d="M820 480 C900 470 950 500 960 560 C890 570 840 550 820 480" fill="url(#leafLight)" />
+    <path d="M760 560 C830 540 880 560 900 620 C830 630 780 610 760 560" fill="url(#leafGradient)" />
+    <path d="M680 640 C750 620 800 640 810 700 C750 710 700 690 680 640" fill="url(#leafLight)" />
+    <path d="M600 720 C670 700 720 720 730 780 C670 790 620 770 600 720" fill="url(#leafGradient)" />
+    <path d="M520 820 C590 800 640 820 650 880 C590 890 540 870 520 820" fill="url(#leafLight)" />
+    <path d="M440 900 C500 890 540 910 550 960 C500 970 460 950 440 900" fill="url(#leafGradient)" />
+  </g>
+
+  <g opacity="0.28" filter="url(#soft)">
+    <circle cx="230" cy="220" r="90" fill="#ffffff" />
+    <circle cx="1120" cy="340" r="120" fill="#ffffff" />
+    <circle cx="980" cy="1020" r="140" fill="#ffffff" />
+    <circle cx="420" cy="1180" r="160" fill="#ffffff" />
+  </g>
+</svg>
