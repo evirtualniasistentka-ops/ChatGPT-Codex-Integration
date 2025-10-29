@@ -215,6 +215,76 @@ function detectMissingDetails(text) {
   return suggestions;
 }
 
+function rewriteClause(fragment) {
+  const sanitized = fragment.replace(/[.!?]+$/, "").trim();
+  if (!sanitized) {
+    return null;
+  }
+
+  const lower = sanitized.toLocaleLowerCase("cs-CZ");
+
+  const patternRewrites = [
+    {
+      regex: /^(potřebuj[ei]|potřebujeme|potřebnost|je potřeba|je třeba|nutné je)\s+(.*)$/i,
+      build: (_, __, rest) => `splnit požadavek, aby ${rest.toLocaleLowerCase("cs-CZ")}`,
+    },
+    {
+      regex: /^(chci|chceme|zadání chce|zadavatel chce|zadavatel žádá)\s+(.*)$/i,
+      build: (_, __, rest) => `naplnit očekávání zadavatele: ${rest.toLocaleLowerCase("cs-CZ")}`,
+    },
+    {
+      regex: /^(zaměř se|zaměřit se|zaměřujeme se)\s+na\s+(.*)$/i,
+      build: (_, __, rest) => `prioritně rozpracovat oblast ${rest.toLocaleLowerCase("cs-CZ")}`,
+    },
+    {
+      regex: /^(cílem je|cílem bude|účelem je|účelem bude|goal is)\s+(.*)$/i,
+      build: (_, __, rest) => `dodat výsledek, jehož cílem je ${rest.toLocaleLowerCase("cs-CZ")}`,
+    },
+    {
+      regex: /^(musí|musíme|nutno|nezapomeň|nezapomenout)\s+(.*)$/i,
+      build: (_, __, rest) => `hlídat povinnou část zadání: ${rest.toLocaleLowerCase("cs-CZ")}`,
+    },
+  ];
+
+  for (const { regex, build } of patternRewrites) {
+    const match = sanitized.match(regex);
+    if (match) {
+      return build(...match);
+    }
+  }
+
+  if (/^\w+\s+se\s+má\s+/i.test(sanitized)) {
+    return `postupovat tak, aby ${lower}`;
+  }
+
+  return `zohlednit, že ${lower}`;
+}
+
+function craftSummaryNarrative(fragments, keywords) {
+  if (!fragments.length) {
+    return null;
+  }
+
+  const topicLine = keywords.length
+    ? `Zadání se soustředí na témata: ${keywords.map((word) => upperFirst(word)).join(", ")}.`
+    : "Zadání zvýrazňuje několik klíčových oblastí, které je nutné uchopit komplexně.";
+
+  const paraphrased = fragments
+    .slice(0, 5)
+    .map(rewriteClause)
+    .filter(Boolean);
+
+  const merged = paraphrased.length
+    ? `Souhrnně je třeba ${paraphrased
+        .map((clause, index) =>
+          index === paraphrased.length - 1 && index !== 0 ? `a ${clause}` : clause
+        )
+        .join(paraphrased.length > 1 ? ", " : "")}.`
+    : null;
+
+  return [topicLine, merged].filter(Boolean).join(" ");
+}
+
 function enhanceContext(rawContext) {
   const trimmed = rawContext.trim();
   if (!trimmed) {
@@ -231,27 +301,32 @@ function enhanceContext(rawContext) {
     }
   });
 
-  const bulletPoints = uniqueFragments
-    .slice(0, 8)
-    .map((fragment) => `- ${upperFirst(fragment)}`)
-    .join("\n");
-
   const keywords = extractTopKeywords(trimmed);
-  const keywordLine = keywords.length
-    ? `Klíčová témata k akcentování: ${keywords
-        .map((word) => upperFirst(word))
-        .join(", ")}.`
-    : "Klíčová témata k akcentování: stanov specifické pojmy, které nesmí chybět.";
+
+  const synthesizedNarrative = craftSummaryNarrative(uniqueFragments, keywords);
+
+  const paraphrasedBullets = uniqueFragments
+    .slice(0, 8)
+    .map(rewriteClause)
+    .filter(Boolean)
+    .map((clause) => `- ${upperFirst(clause)}`)
+    .join("\n");
 
   const refinementSuggestions = detectMissingDetails(trimmed)
     .map((item) => `- ${item}`)
     .join("\n");
 
   return [
-    "Klíčová fakta z kontextu:",
-    bulletPoints,
-    "",
-    keywordLine,
+    synthesizedNarrative,
+    paraphrasedBullets ? "" : null,
+    paraphrasedBullets ? "Klíčové kroky z kontextu:" : null,
+    paraphrasedBullets || null,
+    paraphrasedBullets ? "" : null,
+    keywords.length
+      ? `Klíčová témata k akcentování: ${keywords
+          .map((word) => upperFirst(word))
+          .join(", ")}.`
+      : "Klíčová témata k akcentování: stanov specifické pojmy, které nesmí chybět.",
     "",
     "Doplňující body k ověření:",
     refinementSuggestions,
