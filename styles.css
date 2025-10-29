@@ -15,11 +15,32 @@
 
 body {
   margin: 0;
-  background: var(--green-light);
+  background-color: var(--green-light);
+  background-image: url("assets/branch-background.svg");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
   color: var(--text-dark);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  isolation: isolate;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.82) 0%,
+    rgba(232, 245, 236, 0.7) 35%,
+    rgba(232, 245, 236, 0.45) 65%,
+    rgba(221, 240, 226, 0.35) 100%
+  );
+  pointer-events: none;
+  z-index: -1;
 }
 
 .top-bar {
@@ -27,8 +48,9 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.94);
   border-bottom: 2px solid var(--green-primary);
+  backdrop-filter: blur(6px);
 }
 
 .top-bar h1 {
@@ -52,10 +74,11 @@ body {
 
 .form-section,
 .output-section {
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 15px 35px rgba(27, 143, 87, 0.08);
+  box-shadow: 0 20px 45px rgba(27, 143, 87, 0.12);
+  backdrop-filter: blur(6px);
 }
 
 .field {
@@ -152,10 +175,11 @@ button:active {
 }
 
 .history {
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.92);
   border-top: 1px solid rgba(27, 143, 87, 0.25);
   padding: 1rem 1.5rem 2rem;
   box-shadow: 0 -5px 25px rgba(27, 143, 87, 0.12);
+  backdrop-filter: blur(6px);
 }
 
 .history.hidden {
@@ -185,7 +209,7 @@ button:active {
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
   border: 1px solid rgba(27, 143, 87, 0.2);
-  background: rgba(232, 245, 236, 0.7);
+  background: rgba(232, 245, 236, 0.55);
   color: var(--text-muted);
 }
 
@@ -220,11 +244,12 @@ button:active {
   margin-top: auto;
   padding: 1.5rem;
   text-align: center;
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.94);
   border-top: 2px solid rgba(27, 143, 87, 0.25);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  backdrop-filter: blur(6px);
 }
 
 .app-footer .author {
