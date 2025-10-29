@@ -33,12 +33,14 @@ body::before {
   position: fixed;
   inset: 0;
   background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.82) 0%,
-    rgba(232, 245, 236, 0.7) 35%,
-    rgba(232, 245, 236, 0.45) 65%,
-    rgba(221, 240, 226, 0.35) 100%
-  );
+      180deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(232, 245, 236, 0.82) 35%,
+      rgba(232, 245, 236, 0.65) 65%,
+      rgba(221, 240, 226, 0.55) 100%
+    )
+    ,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4));
   pointer-events: none;
   z-index: -1;
 }
@@ -48,9 +50,12 @@ body::before {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.94);
+  background-color: #ffffff;
+  background-image: linear-gradient(145deg, rgba(232, 245, 236, 0.88), rgba(255, 255, 255, 0.9));
   border-bottom: 2px solid var(--green-primary);
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 12px 24px rgba(27, 143, 87, 0.12);
 }
 
 .top-bar h1 {
@@ -67,18 +72,20 @@ body::before {
 .layout {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
   gap: 1.5rem;
   padding: 1.5rem;
 }
 
 .form-section,
 .output-section {
-  background: rgba(255, 255, 255, 0.92);
+  background-color: #ffffff;
+  background-image: linear-gradient(160deg, rgba(232, 245, 236, 0.85), rgba(255, 255, 255, 0.92));
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 20px 45px rgba(27, 143, 87, 0.12);
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .field {
@@ -175,11 +182,13 @@ button:active {
 }
 
 .history {
-  background: rgba(255, 255, 255, 0.92);
+  background-color: #ffffff;
+  background-image: linear-gradient(180deg, rgba(232, 245, 236, 0.78), rgba(255, 255, 255, 0.92));
   border-top: 1px solid rgba(27, 143, 87, 0.25);
   padding: 1rem 1.5rem 2rem;
   box-shadow: 0 -5px 25px rgba(27, 143, 87, 0.12);
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .history.hidden {
@@ -225,6 +234,25 @@ button:active {
     gap: 0.75rem;
   }
 
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.25rem;
+  }
+
+  .top-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .top-actions button {
+    flex: 1;
+  }
+
+  .form-section,
+  .output-section {
+    padding: 1.25rem;
+  }
+
   .actions {
     justify-content: center;
   }
@@ -238,18 +266,95 @@ button:active {
   #promptResult {
     min-height: 220px;
   }
+
+  .history {
+    margin: 0 0.75rem 1.5rem;
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 520px) {
+  :root {
+    font-size: 15px;
+  }
+
+  body {
+    background-size: auto 140%;
+    background-position: center top 40px;
+  }
+
+  .layout {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .top-bar {
+    padding: 1rem;
+    border-radius: 0 0 1rem 1rem;
+  }
+
+  .top-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  button,
+  .top-actions button {
+    width: 100%;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .output-header {
+    width: 100%;
+  }
+
+  .output-header button {
+    width: 100%;
+  }
+
+  .history {
+    margin: 0 1rem 1.5rem;
+    padding: 1.25rem;
+  }
+
+  #promptResult {
+    min-height: 200px;
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(6px)) or (backdrop-filter: blur(6px))) {
+  .top-bar,
+  .form-section,
+  .output-section,
+  .history,
+  .app-footer {
+    background-image: none;
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+
+  .form-section,
+  .output-section {
+    box-shadow: 0 12px 32px rgba(27, 143, 87, 0.18);
+  }
 }
 
 .app-footer {
   margin-top: auto;
   padding: 1.5rem;
   text-align: center;
-  background: rgba(255, 255, 255, 0.94);
+  background-color: #ffffff;
+  background-image: linear-gradient(180deg, rgba(232, 245, 236, 0.8), rgba(255, 255, 255, 0.92));
   border-top: 2px solid rgba(27, 143, 87, 0.25);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .app-footer .author {
