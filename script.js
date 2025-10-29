@@ -47,30 +47,81 @@ function updateHistoryList() {
   });
 }
 
+function toBulletList(text) {
+  return text
+    .split(/[\n;]+/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => `- ${item}`)
+    .join("\n");
+}
+
 function buildPrompt(values) {
   const { tool, role, context, steps, output, tone } = values;
 
-  const lines = [
-    `Nástroj: ${tool}`,
-    `Role: ${role}`,
-    `Kontext: ${context}`,
-  ];
+  const promptSections = [];
 
-  if (steps) {
-    lines.push(`Postup / instrukce: ${steps}`);
-  }
-
-  lines.push(`Požadovaný výstup: ${output}`);
-
-  if (tone) {
-    lines.push(`Ton / styl: ${tone}`);
-  }
-
-  lines.push(
-    "Ujisti se, že odpověď je strukturovaná, srozumitelná a přizpůsobená danému nástroji."
+  promptSections.push(
+    [
+      "=== ROLE A NÁSTROJ ===",
+      `Pracuj s nástrojem ${tool} a přijmi roli: ${role}.`,
+      "Předpokládej profesionální znalost nástroje a přizpůsob tomuto výstup.",
+    ].join("\n")
   );
 
-  return lines.join("\n\n");
+  promptSections.push(
+    [
+      "=== KONTEXT ===",
+      context,
+      "Zohledni výše uvedené skutečnosti při každém kroku řešení.",
+    ].join("\n")
+  );
+
+  if (steps) {
+    promptSections.push(
+      [
+        "=== DOPORUČENÝ POSTUP ===",
+        toBulletList(steps),
+        "Můžeš navrhnout lepší přístup, pokud zvýší kvalitu výsledku, ale vždy vysvětli proč.",
+      ].join("\n")
+    );
+  }
+
+  promptSections.push(
+    [
+      "=== CÍLOVÝ VÝSTUP ===",
+      toBulletList(output),
+      "Doruč konkrétní, prakticky využitelný výstup, který plní všechny požadavky.",
+    ].join("\n")
+  );
+
+  if (tone) {
+    promptSections.push(
+      ["=== TON A KOMUNIKAČNÍ STYL ===", tone, "Dodrž uvedený styl v celé odpovědi."].join(
+        "\n"
+      )
+    );
+  }
+
+  promptSections.push(
+    [
+      "=== STRUKTURA ODPOVĚDI ===",
+      "1. Shrnutí: 2–3 věty, které popisují plánovaný postup a očekávaný výsledek.",
+      "2. Detailní řešení: logicky členěné sekce nebo odrážky s podrobným vysvětlením.",
+      "3. Doporučení / další kroky: co může následovat nebo na co si dát pozor.",
+    ].join("\n")
+  );
+
+  promptSections.push(
+    [
+      "=== KONTROLNÍ SEZNAM PŘED ODESLÁNÍM ===",
+      "- Ověř, že byla využita role i nástroj a jejich specifika.",
+      "- Zahrň všechny uvedené požadavky na výstup a případné instrukce.",
+      "- Pokud něco chybí nebo je nejasné, vysvětli, jak by bylo vhodné to doplnit.",
+    ].join("\n")
+  );
+
+  return promptSections.join("\n\n");
 }
 
 form.addEventListener("submit", (event) => {
