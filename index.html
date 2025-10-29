@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generátor Promptů</title>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top-bar">
+    <h1>Generátor promptů</h1>
+    <div class="top-actions">
+      <button id="historyToggle" class="secondary">Historie</button>
+      <button id="resetBtn" class="secondary">Reset</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="form-section">
+      <form id="promptForm">
+        <div class="field">
+          <label for="tool">Vyberte nástroj</label>
+          <select id="tool" name="tool" required>
+            <optgroup label="LLM modely">
+              <option value="ChatGPT">ChatGPT</option>
+              <option value="Claude">Claude</option>
+              <option value="Gemini">Gemini</option>
+            </optgroup>
+            <optgroup label="Obrázkové generátory">
+              <option value="Midjourney">Midjourney</option>
+              <option value="DALL·E">DALL·E</option>
+            </optgroup>
+            <optgroup label="Video generátory">
+              <option value="RunwayML">RunwayML</option>
+              <option value="Pika Labs">Pika Labs</option>
+            </optgroup>
+            <optgroup label="Hudební generátory">
+              <option value="AIVA">AIVA</option>
+              <option value="Soundraw">Soundraw</option>
+            </optgroup>
+            <optgroup label="Další nástroje">
+              <option value="Other">Jiné</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="role">Role</label>
+          <input
+            type="text"
+            id="role"
+            name="role"
+            placeholder="Např. zkušený copywriter"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="context">Kontext</label>
+          <textarea
+            id="context"
+            name="context"
+            rows="3"
+            placeholder="Shrňte situaci nebo vstupní data"
+            required
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="steps">Postup / instrukce</label>
+          <textarea
+            id="steps"
+            name="steps"
+            rows="3"
+            placeholder="Seznam kroků nebo přístup, který má nástroj následovat"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="output">Výstup</label>
+          <textarea
+            id="output"
+            name="output"
+            rows="3"
+            placeholder="Popište požadovaný výstup"
+            required
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="tone">Ton nebo styl (volitelné)</label>
+          <input
+            type="text"
+            id="tone"
+            name="tone"
+            placeholder="Např. přátelský, profesionální"
+          />
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="primary" id="generateBtn">Generovat prompt</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="output-section">
+      <div class="output-header">
+        <h2>Vygenerovaný prompt</h2>
+        <button id="copyBtn" class="secondary">Kopírovat</button>
+      </div>
+      <textarea id="promptResult" readonly placeholder="Zde se zobrazí váš prompt"></textarea>
+    </section>
+  </main>
+
+  <aside id="historyPanel" class="history hidden">
+    <h3>Poslední prompty</h3>
+    <p class="history-hint">Zobrazuje se prvních pár slov posledních šesti promptů.</p>
+    <ul id="historyList"></ul>
+  </aside>
+
+  <footer class="app-footer">
+    <p class="author">Vytvořila Eva Cenklová</p>
+    <a class="author-link" href="https://www.cenklova.cz" target="_blank" rel="noopener"
+      >www.cenklova.cz</a
+    >
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

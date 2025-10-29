@@ -1,0 +1,246 @@
+:root {
+  --green-primary: #1b8f57;
+  --green-dark: #136a3f;
+  --green-light: #e8f5ec;
+  --white: #ffffff;
+  --text-dark: #1f2d3d;
+  --text-muted: #5c6b73;
+  font-size: 16px;
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--green-light);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--white);
+  border-bottom: 2px solid var(--green-primary);
+}
+
+.top-bar h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--green-dark);
+}
+
+.top-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.form-section,
+.output-section {
+  background: var(--white);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 15px 35px rgba(27, 143, 87, 0.08);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+label {
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(27, 143, 87, 0.25);
+  font: inherit;
+  resize: vertical;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 2px rgba(27, 143, 87, 0.2);
+}
+
+textarea {
+  min-height: 120px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.primary {
+  background: var(--green-primary);
+  color: var(--white);
+  box-shadow: 0 10px 20px rgba(27, 143, 87, 0.25);
+}
+
+.primary:hover {
+  background: var(--green-dark);
+}
+
+.secondary {
+  background: transparent;
+  color: var(--green-dark);
+  border: 1px solid rgba(27, 143, 87, 0.6);
+}
+
+.secondary:hover {
+  background: rgba(27, 143, 87, 0.08);
+}
+
+.output-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#promptResult {
+  flex: 1;
+  min-height: 260px;
+  font-family: "Fira Code", "Courier New", monospace;
+  background: rgba(232, 245, 236, 0.5);
+  border: 1px solid rgba(27, 143, 87, 0.3);
+}
+
+.history {
+  background: var(--white);
+  border-top: 1px solid rgba(27, 143, 87, 0.25);
+  padding: 1rem 1.5rem 2rem;
+  box-shadow: 0 -5px 25px rgba(27, 143, 87, 0.12);
+}
+
+.history.hidden {
+  display: none;
+}
+
+.history h3 {
+  margin-top: 0;
+  color: var(--green-dark);
+}
+
+.history-hint {
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+#historyList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+#historyList li {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(27, 143, 87, 0.2);
+  background: rgba(232, 245, 236, 0.7);
+  color: var(--text-muted);
+}
+
+.empty-history {
+  text-align: center;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+
+  .output-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  #promptResult {
+    min-height: 220px;
+  }
+}
+
+.app-footer {
+  margin-top: auto;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--white);
+  border-top: 2px solid rgba(27, 143, 87, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.app-footer .author {
+  margin: 0;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+
+.app-footer .author-link {
+  color: var(--green-primary);
+  font-weight: 500;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.app-footer .author-link:hover,
+.app-footer .author-link:focus {
+  text-decoration: underline;
+}
